@@ -15,21 +15,18 @@ const app = new Elysia()
   // Add Classmates
   .post('/classmates', ({body}: {body: any}) => {
     const data = JSON.parse(fs.readFileSync('classmates.json', "utf-8")) as any[];
-
-    if (!body.id) {
-      return {
-        status: 'error',
-        message: 'You forgot to specify an id'
-      };
-    }
-    const id = Number(body.id)
-    const exists = data.find(el => el.id === id)
-    if (exists) {
-      return {
-        status: 'error',
-        message: 'A user with this id already exists',
+    let newId
+    if (data.length === 0) {
+      newId = {
+        id: 1
+      }
+    } else {
+      let highestId = Math.max(...data.map(el => Number(el.id) || 0));
+      newId = {
+        id: highestId + 1
       }
     }
+    body.id = newId.id
     data.push(body)
     fs.writeFileSync('classmates.json', JSON.stringify(data, null, 2), 'utf-8');
     return {
