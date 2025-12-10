@@ -6,7 +6,7 @@ const app = new Elysia()
 
   // Add a classmate
   .post("/classmate", async ({body}: {body: any}) => {
-    const classmate = await database.classmate.create({
+    const classmate = await database.Classmate.create({
       data: body
     })
     return {
@@ -19,7 +19,7 @@ const app = new Elysia()
   // Update a classmate
   .put('/classmate/:id', async ({params, body}: {params: any, body: any}) => {
     try {
-      const classmate = await database.classmate.update({
+      const classmate = await database.Classmate.update({
         where: {
           id: Number(params.id)
         },
@@ -41,7 +41,7 @@ const app = new Elysia()
   // Delete a classmate
   .delete('/classmate/:id', async ({params}: {params: any}) => {
     try {
-      await database.classmate.delete({
+      await database.Classmate.delete({
         where: {
           id: Number(params.id)
         }
@@ -92,7 +92,7 @@ const app = new Elysia()
       }
     }
 
-    return await database.classmate.findMany({
+    return await database.Classmate.findMany({
       where: whereClause,
       orderBy: {
         name: 'asc'
