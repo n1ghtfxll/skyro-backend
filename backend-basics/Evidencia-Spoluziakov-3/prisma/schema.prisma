@@ -15,7 +15,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model classmate {
+model Classmate {
   name String
   surname String
   age Int
