@@ -6,7 +6,7 @@ const app = new Elysia()
 
   // Add a classmate
   .post("/classmate", async ({body}: {body: any}) => {
-    const classmate = await database.Classmate.create({
+    const classmate = await database.classmate.create({
       data: body
     })
     return {
@@ -19,7 +19,7 @@ const app = new Elysia()
   // Update a classmate
   .put('/classmate/:id', async ({params, body}: {params: any, body: any}) => {
     try {
-      const classmate = await database.Classmate.update({
+      const classmate = await database.classmate.update({
         where: {
           id: Number(params.id)
         },
@@ -30,7 +30,7 @@ const app = new Elysia()
         message: 'Classmate with id ' + params.id + ' updated successfully',
         classmate: classmate
       }
-    } catch (error: any) {
+    } catch (error) {
       return {
         status: 'error', 
         message: 'Classmate with id ' + params.id + ' not found',
@@ -41,7 +41,7 @@ const app = new Elysia()
   // Delete a classmate
   .delete('/classmate/:id', async ({params}: {params: any}) => {
     try {
-      await database.Classmate.delete({
+      await database.classmate.delete({
         where: {
           id: Number(params.id)
         }
@@ -50,7 +50,7 @@ const app = new Elysia()
         status: 'success',
         message: 'Classmate with id ' + params.id + ' deleted successfully',
       }
-    } catch (error: any) {
+    } catch (error) {
       return {
         status: 'error', 
         message: 'Classmate with id ' + params.id + ' not found',
@@ -92,7 +92,7 @@ const app = new Elysia()
       }
     }
 
-    return await database.Classmate.findMany({
+    return await database.classmate.findMany({
       where: whereClause,
       orderBy: {
         name: 'asc'
