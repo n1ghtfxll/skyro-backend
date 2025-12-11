@@ -1,5 +1,6 @@
 import { Elysia } from "elysia";
 import { PrismaClient } from './generated/prisma'
+import { utils } from './utils'
 
 const database = new PrismaClient() 
 const app = new Elysia()
@@ -18,43 +19,43 @@ const app = new Elysia()
 
   // Update a classmate
   .put('/classmate/:id', async ({params, body}: {params: any, body: any}) => {
-    try {
-      const classmate = await database.classmate.update({
-        where: {
-          id: Number(params.id)
-        },
-        data: body
-      })
+    const exists = await utils.doesClassmateExist(params.id)
+    if (exists == false) {
       return {
-        status: 'success',
-        message: 'Classmate with id ' + params.id + ' updated successfully',
-        classmate: classmate
+        status: 'error',
+        message: 'Cant find user with that id'
       }
-    } catch (error) {
-      return {
-        status: 'error', 
-        message: 'Classmate with id ' + params.id + ' not found',
-      }
+    }
+    const classmate = await database.classmate.update({
+      where: {
+        id: Number(params.id)
+      },
+      data: body
+    })
+    return {
+      status: 'success',
+      message: 'Classmate with id ' + params.id + ' updated successfully',
+      classmate: classmate
     }
   })
 
   // Delete a classmate
   .delete('/classmate/:id', async ({params}: {params: any}) => {
-    try {
-      await database.classmate.delete({
-        where: {
-          id: Number(params.id)
-        }
-      })
+    const exists = await utils.doesClassmateExist(params.id)
+    if (exists == false) {
       return {
-        status: 'success',
-        message: 'Classmate with id ' + params.id + ' deleted successfully',
+        status: 'error',
+        message: 'Cant find user with that id'
       }
-    } catch (error) {
-      return {
-        status: 'error', 
-        message: 'Classmate with id ' + params.id + ' not found',
+    }
+    await database.classmate.delete({
+      where: {
+        id: Number(params.id)
       }
+    })
+    return {
+      status: 'success',
+      message: 'Classmate with id ' + params.id + ' deleted successfully',
     }
   })
 
