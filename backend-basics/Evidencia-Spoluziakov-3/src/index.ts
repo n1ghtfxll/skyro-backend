@@ -6,7 +6,7 @@ const database = new PrismaClient()
 const app = new Elysia()
 
   // Add a classmate
-  .post("/classmate", async ({body}: {body: any}) => {
+  .post("/classmates", async ({body}: {body: any}) => {
     const classmate = await database.classmate.create({
       data: body
     })
@@ -18,7 +18,7 @@ const app = new Elysia()
   })
 
   // Update a classmate
-  .put('/classmate/:id', async ({params, body}: {params: any, body: any}) => {
+  .put('/classmates/:id', async ({params, body}: {params: any, body: any}) => {
     const exists = await utils.doesClassmateExist(params.id)
     if (exists == false) {
       return {
@@ -40,7 +40,7 @@ const app = new Elysia()
   })
 
   // Delete a classmate
-  .delete('/classmate/:id', async ({params}: {params: any}) => {
+  .delete('/classmates/:id', async ({params}: {params: any}) => {
     const exists = await utils.doesClassmateExist(params.id)
     if (exists == false) {
       return {
