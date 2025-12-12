@@ -8,10 +8,7 @@ async function doesClassmateExist(id: number) {
             id: Number(id)
         }
     })
-    if (!exists) {
-        return false
-    }
-    return true
+    return !!exists
 }
 
 export const utils = {
