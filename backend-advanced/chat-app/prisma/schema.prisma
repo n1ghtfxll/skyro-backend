@@ -1,0 +1,57 @@
+generator client {
+  provider      = "prisma-client-js"
+  output        = "../src/generated/prisma"
+  binaryTargets = ["native", "darwin-arm64"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int                  @id @default(autoincrement())
+  email         String               @unique
+  password      String
+  token         String?
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  conversations ConversationMember[]
+  messages      Message[]
+}
+
+model Conversation {
+  id       Int                  @id @default(autoincrement())
+  name     String               
+  members  ConversationMember[]
+  messages Message[]
+}
+
+model ConversationMember {
+  id             Int          @id @default(autoincrement())
+  userId         Int
+  conversationId Int
+  hasUnread      Boolean
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  user           User         @relation(fields: [userId], references: [id])
+
+  @@unique([userId, conversationId])
+}
+
+model Message {
+  id               Int          @id @default(autoincrement())
+  conversationId   Int
+  authorId         Int
+  content          String
+  replyToMessageId Int?
+  reactions        Json         @default("[]")
+  createdAt        DateTime     @default(now())
+  author           User         @relation(fields: [authorId], references: [id])
+  conversation     Conversation @relation(fields: [conversationId], references: [id])
+}
+
+model Emoji {
+  id   Int    @id @default(autoincrement())
+  code String
+  name String
+}
